@@ -1,0 +1,20 @@
+[package]
+name = "mdbook-typst"
+version = "0.1.0"
+license = "MIT OR Apache-2.0"
+authors = ["Christian Legnitto <christian@legnitto.com>"]
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[dependencies]
+tracing = "0.1"
+tracing-subscriber = "0.3"
+mdbook = { version = "0.4.35", default-features = false }
+pullup = { version = "0.3", features = [
+    "builder",
+    "mdbook",
+    "markdown",
+    "typst",
+    "tracing"
+] }
+serde = { version = "1.0", features = ["derive"] }
