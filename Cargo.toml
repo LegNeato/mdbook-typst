@@ -2,7 +2,7 @@
 name = "mdbook-typst"
 version = "0.1.0"
 license = "MIT OR Apache-2.0"
-description = "An mdBook backend converts the book to Typst markup, pdf, png, or svg"
+description = "An mdBook backend to output Typst markup, pdf, png, or svg"
 authors = ["Christian Legnitto <christian@legnitto.com>"]
 edition = "2021"
 
