@@ -10,7 +10,7 @@ edition = "2021"
 tracing = "0.1"
 tracing-subscriber = "0.3"
 mdbook = { version = "0.4.35", default-features = false }
-pullup = { version = "0.3", features = [
+pullup = { version = "0.3.1", features = [
     "builder",
     "mdbook",
     "markdown",
