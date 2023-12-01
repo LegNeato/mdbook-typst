@@ -408,7 +408,13 @@ fn main() -> Result<(), std::io::Error> {
     };
 
     if let Some(mut c) = command {
-        c.output().unwrap();
+        let output = c.output().unwrap();
+        io::stdout().write_all(&output.stdout).unwrap();
+        io::stderr().write_all(&output.stderr).unwrap();
+        if !output.status.success() {
+            std::process::exit(-2);
+        }
+        io::stderr().write_all(&output.stderr).unwrap();
     } else if markup_path != final_path {
         std::fs::rename(markup_path, final_path)?;
     }
