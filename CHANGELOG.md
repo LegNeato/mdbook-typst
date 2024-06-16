@@ -5,7 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.1.3 (2024-06-16)
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 1 commit contributed to the release.
+ - 105 days passed between releases.
+ - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
+ - 1 unique issue was worked on: [#7](https://github.com/LegNeato/mdbook-typst/issues/7)
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **[#7](https://github.com/LegNeato/mdbook-typst/issues/7)**
+    - Remove `-v` ([`28b435e`](https://github.com/LegNeato/mdbook-typst/commit/28b435e837ddf871b9b7fb80afc6ff9884f34c9b))
+</details>
+
 ## 0.1.2 (2024-03-03)
+
+<csr-id-1977f5068194d80566070497ebb58048458669bf/>
 
 ### Chore
 
@@ -15,7 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 2 commits contributed to the release.
+ - 3 commits contributed to the release.
  - 92 days passed between releases.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -27,6 +50,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release mdbook-typst v0.1.2 ([`ccd90d0`](https://github.com/LegNeato/mdbook-typst/commit/ccd90d0edcb5fad1eed8b4bf977124cbf009a60b))
     - Add changelog for latest release ([`1977f50`](https://github.com/LegNeato/mdbook-typst/commit/1977f5068194d80566070497ebb58048458669bf))
     - Bump pullup version ([`5f0a664`](https://github.com/LegNeato/mdbook-typst/commit/5f0a664dd823c5f7595a429cd65a8124caf2d30c))
 </details>
