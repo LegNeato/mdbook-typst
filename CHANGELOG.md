@@ -5,13 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 0.1.3 (2024-06-16)
+## 0.1.4 (2024-06-16)
 
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
 
  - 1 commit contributed to the release.
+ - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
+ - 1 unique issue was worked on: [#4](https://github.com/LegNeato/mdbook-typst/issues/4)
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **[#4](https://github.com/LegNeato/mdbook-typst/issues/4)**
+    - Fix typo with heading numbering styles ([`eb4bbe7`](https://github.com/LegNeato/mdbook-typst/commit/eb4bbe72a84ed696b77c21018b1c776224d303b2))
+</details>
+
+## 0.1.3 (2024-06-16)
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 3 commits contributed to the release.
  - 105 days passed between releases.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 1 unique issue was worked on: [#7](https://github.com/LegNeato/mdbook-typst/issues/7)
@@ -24,6 +44,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
  * **[#7](https://github.com/LegNeato/mdbook-typst/issues/7)**
     - Remove `-v` ([`28b435e`](https://github.com/LegNeato/mdbook-typst/commit/28b435e837ddf871b9b7fb80afc6ff9884f34c9b))
+ * **Uncategorized**
+    - Release mdbook-typst v0.1.3 ([`b756318`](https://github.com/LegNeato/mdbook-typst/commit/b7563184a9e7ddb44485f00ffef41c87dca3766b))
+    - Adjusting changelogs prior to release of mdbook-typst v0.1.3 ([`bd759e3`](https://github.com/LegNeato/mdbook-typst/commit/bd759e378862de187a324694e5875721fbc0bc95))
 </details>
 
 ## 0.1.2 (2024-03-03)
