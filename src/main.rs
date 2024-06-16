@@ -168,7 +168,7 @@ fn main() -> Result<(), std::io::Error> {
 
     // Heading numbering.
     // Note this is a bit different as we don't set a default.
-    if let Some(heading_numbering) = cfg.style.text_font.as_ref().and_then(none_on_empty) {
+    if let Some(heading_numbering) = cfg.style.heading_numbering.as_ref().and_then(none_on_empty) {
         style_events.push(pullup::ParserEvent::Typst(pullup::typst::Event::Set(
             "heading".into(),
             "numbering".into(),
