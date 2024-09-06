@@ -5,13 +5,45 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.1.5 (2024-09-06)
+
+### Chore
+
+ - <csr-id-633edaa6c48d6a4a3795760d905e6723e65f697d/> Make README clearer.
+   Multiple people have got tripped up on which commands to run.
+
+### New Features
+
+ - <csr-id-4b3fd71c62c7a28023ae216a1d2cb8291a5ea00a/> Add support for quotes.
+   Fixes https://github.com/LegNeato/mdbook-typst/issues/9.
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 2 commits contributed to the release.
+ - 82 days passed between releases.
+ - 2 commits were understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Make README clearer. ([`633edaa`](https://github.com/LegNeato/mdbook-typst/commit/633edaa6c48d6a4a3795760d905e6723e65f697d))
+    - Add support for quotes. ([`4b3fd71`](https://github.com/LegNeato/mdbook-typst/commit/4b3fd71c62c7a28023ae216a1d2cb8291a5ea00a))
+</details>
+
 ## 0.1.4 (2024-06-16)
 
 ### Commit Statistics
 
 <csr-read-only-do-not-edit/>
 
- - 1 commit contributed to the release.
+ - 3 commits contributed to the release.
  - 0 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 1 unique issue was worked on: [#4](https://github.com/LegNeato/mdbook-typst/issues/4)
 
@@ -23,6 +55,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
  * **[#4](https://github.com/LegNeato/mdbook-typst/issues/4)**
     - Fix typo with heading numbering styles ([`eb4bbe7`](https://github.com/LegNeato/mdbook-typst/commit/eb4bbe72a84ed696b77c21018b1c776224d303b2))
+ * **Uncategorized**
+    - Release mdbook-typst v0.1.4 ([`a9a13cd`](https://github.com/LegNeato/mdbook-typst/commit/a9a13cd0d4a9d95d524d103e6eda985ac347b949))
+    - Adjusting changelogs prior to release of mdbook-typst v0.1.4 ([`9507381`](https://github.com/LegNeato/mdbook-typst/commit/9507381b2ece72b7fff346750f0c8cde1a3e3fdf))
 </details>
 
 ## 0.1.3 (2024-06-16)
