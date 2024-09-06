@@ -20,11 +20,17 @@ Next, install `mdbook-typst` (this project):
 cargo install mdbook-typst
 ```
 
-Finally, add an entry to your
+Then, add an entry to your
 [book.toml]:
 
 ```toml
 [output.typst]
+```
+
+Finally, build your book via mdBook:
+
+```sh
+mdbook build
 ```
 
 By default `mdbook-typst` will output raw Typst markup to `book/typst/book.typst`.
