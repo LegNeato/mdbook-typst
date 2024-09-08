@@ -5,7 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.1.6 (2024-09-08)
+
+### Other
+
+ - <csr-id-013290fde460d08e644cf4069c8341e38c79c7c1/> Add support for tables.
+   Fixes https://github.com/LegNeato/mdbook-typst/issues/8.
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 1 commit contributed to the release.
+ - 1 day passed between releases.
+ - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Add support for tables. ([`013290f`](https://github.com/LegNeato/mdbook-typst/commit/013290fde460d08e644cf4069c8341e38c79c7c1))
+</details>
+
 ## 0.1.5 (2024-09-06)
+
+<csr-id-633edaa6c48d6a4a3795760d905e6723e65f697d/>
 
 ### Chore
 
@@ -21,7 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 2 commits contributed to the release.
+ - 3 commits contributed to the release.
  - 82 days passed between releases.
  - 2 commits were understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -33,6 +61,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release mdbook-typst v0.1.5 ([`9d5c581`](https://github.com/LegNeato/mdbook-typst/commit/9d5c58122dd676a71a35ebf00e1051d99b79adb4))
     - Make README clearer. ([`633edaa`](https://github.com/LegNeato/mdbook-typst/commit/633edaa6c48d6a4a3795760d905e6723e65f697d))
     - Add support for quotes. ([`4b3fd71`](https://github.com/LegNeato/mdbook-typst/commit/4b3fd71c62c7a28023ae216a1d2cb8291a5ea00a))
 </details>
