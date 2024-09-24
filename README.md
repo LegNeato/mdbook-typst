@@ -57,3 +57,14 @@ book using the [pullup](https://github.com/LegNeato/pullup) project.
 [mdBook]: https://github.com/rust-lang/mdBook
 [book.toml]: https://rust-lang.github.io/mdBook/guide/creating.html#booktoml
 [Typst]: https://typst.app/docs/
+
+
+## Run a local version of this project
+
+Clone the repo and then `cargo build --release`
+
+```
+export PATH=$(pwd)/target/release:$PATH
+```
+
+will Override the Global `mdbook-typst` Command Temporarily
