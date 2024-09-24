@@ -61,33 +61,6 @@ fn main() -> Result<(), std::io::Error> {
 
     events = Box::new(FixHeadingStutter::new(events));
 
-    // Detect md *** rule and convert them into Typst #line.
-    // Could be moved into PartToCoverPage ???
-
-    events = Box::new(events.map(|event| match event {
-        // Detect horizontal rule (hr) in markdown.
-        ParserEvent::Markdown(pullup::markdown::Event::Rule) => {
-            pullup::ParserEvent::Typst(pullup::typst::Event::Raw(
-                //"#line(length: 100%)\n".into(),
-                "#align(center, line(length: 60%))\n".into(),
-            ))
-        }
-        // Keep all other events unchanged.
-        _ => event,
-    }));
-
-
-    // // Detect double space at the end of a line and convert them into Typst \.
-
-    // events = Box::new(events.map(|event| match event {
-    //     // Detect line break in markdown.
-    //     ParserEvent::Markdown(pullup::markdown::Event::HardBreak) => {
-    //         pullup::ParserEvent::Typst(pullup::typst::Event::Raw("\\\n".into()))
-    //     }
-    //     // Keep all other events unchanged.
-    //     _ => event,
-    // }));
-
     // Figure out the output filename and location.
     let outname = if let Some(n) = cfg.output.name {
         use config::OutputFormat;

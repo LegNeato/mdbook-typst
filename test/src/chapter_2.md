@@ -1,4 +1,4 @@
-# Chapter 1
+# Chapter 2
 
 A poem is with line break  
 At every corner of its lines
@@ -30,7 +30,6 @@ Test with a quote below:
 
 > this is a quote
 
-## There ca be no two first level heading in a md file!
 
 Test
 

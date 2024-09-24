@@ -36,10 +36,11 @@ where
 
     fn next(&mut self) -> Option<Self::Item> {
 
-        let next_event = self.iter.next();
-        println!("PartToCoverPage: Processing event: {:?}", next_event);
-
-        match (self.in_part, next_event) {
+        // for debugging uncomment below:
+        // let next_event = self.iter.next();
+        // println!("PartToCoverPage: Processing event: {:?}", next_event);
+        // match (self.in_part, next_event) {
+        match (self.in_part, self.iter.next()) {
             (_, Some(ParserEvent::Mdbook(MdbookEvent::Start(MdbookTag::Part(name, _))))) => {
                 if let Some(name) = name {
                     self.in_part = true;
@@ -90,15 +91,31 @@ where
             )))),
             // Here, we replace Parbreak with the correct raw event.
             (_, Some(ParserEvent::Typst(TypstEvent::Parbreak))) => {
-                println!("Replacing Parbreak with \\\n");
                 Some(ParserEvent::Typst(TypstEvent::Raw("\\\n".into())))
             },
             // fix quotes ending with a newline
             (_, Some(ParserEvent::Typst(TypstEvent::End(TypstTag::Quote(..))))) => {
-                println!("Ending a quote block without extra newline");
                 Some(ParserEvent::Typst(TypstEvent::Raw("]\n".into()))) // No newline here
+            },
+            // Detect horizontal rule (hr) in markdown.
+            (_, Some(ParserEvent::Markdown(pullup::markdown::Event::Rule))) => {
+                Some(ParserEvent::Typst(TypstEvent::Raw(
+                    "#align(center, line(length: 60%))\n".into())))
             }
-            
+            // Handle footnote reference
+            // Some(ParserEvent::Mdbook(MdbookEvent::MarkdownContentEvent(MdEvent::FootnoteReference(label)))) => {
+            //     // Convert footnote reference to Typst
+            //     Some(ParserEvent::Typst(TypstEvent::Raw(
+            //         format!("#footnote(ref: \"{}\")", label).into(),
+            //     )))
+            // },
+            // Handle footnote content
+            // Some(ParserEvent::Mdbook(MdbookEvent::MarkdownContentEvent(MdEvent::FootnoteDefinition(label, content)))) => {
+            //     // Convert footnote content to Typst format
+            //     Some(ParserEvent::Typst(TypstEvent::Raw(
+            //         format!("#footnote[{}]", content).into(),
+            //     )))
+            // }
 
             (_, x) => x,
         }
