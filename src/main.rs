@@ -61,7 +61,7 @@ fn main() -> Result<(), std::io::Error> {
 
     events = Box::new(FixHeadingStutter::new(events));
 
-    // Inside your event processing loop:
+    // Detect md *** rule and convert them inot Typst #line.
 
     events = Box::new(events.map(|event| match event {
         // Detect horizontal rule (hr) in markdown.
@@ -74,7 +74,6 @@ fn main() -> Result<(), std::io::Error> {
         // Keep all other events unchanged.
         _ => event,
     }));
-    println!("hello there!");
 
     // Figure out the output filename and location.
     let outname = if let Some(n) = cfg.output.name {
