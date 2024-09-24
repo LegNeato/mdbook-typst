@@ -67,4 +67,4 @@ Clone the repo and then `cargo build --release`
 export PATH=$(pwd)/target/release:$PATH
 ```
 
-will Override the Global `mdbook-typst` Command Temporarily
+will Override the Global `mdbook-typst` Command Temporarily in your current terminal window.

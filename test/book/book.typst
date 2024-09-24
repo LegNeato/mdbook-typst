@@ -1,0 +1,32 @@
+#set document(title: "Test Book")
+#set document(author: ("YourName"))
+#set page(paper: "us-letter")
+#set text(size: 11pt)
+#set text(font: "Helvetica")
+#show par: set block(spacing:2em)
+#set par(leading: .8em)
+
+        #show heading: it => [
+            #block(above: 2em, below: 2em, it)
+        ]
+#show link: underline
+#show link: set text(blue)
+#show outline.entry.where(level: 1):it => {
+                                    v(11pt, weak: true)
+                                   strong(it) 
+                                }
+#outline(depth: 2, indent: 2em)
+#pagebreak()
+= Chapter 1
+#par()[Test]
+=== Section 1
+#par()[Test]
+#align(center, line(length: 60%))
+=== Section 2
+#par()[Test]
+== Chapter 2
+#par()[Test]
+#align(center, line(length: 60%))
+#par()[Test]
+#pagebreak(weak: true)
+#pagebreak(weak: true)
