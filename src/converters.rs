@@ -98,24 +98,28 @@ where
                 Some(ParserEvent::Typst(TypstEvent::Raw("]\n".into()))) // No newline here
             },
             // Detect horizontal rule (hr) in markdown.
-            (_, Some(ParserEvent::Markdown(pullup::markdown::Event::Rule))) => {
+            (_, Some(ParserEvent::Markdown(MdEvent::Rule))) => {
                 Some(ParserEvent::Typst(TypstEvent::Raw(
                     "#align(center, line(length: 60%))\n".into())))
-            }
+            },
             // Handle footnote reference
-            // Some(ParserEvent::Mdbook(MdbookEvent::MarkdownContentEvent(MdEvent::FootnoteReference(label)))) => {
+            // TODO: This is not working at the moment.
+            (_, Some(ParserEvent::Markdown(MdEvent::FootnoteReference(label)))) => {
+                // Convert footnote reference to Typst
+                println!("footnote ref: {:?}", label);
+                Some(ParserEvent::Typst(TypstEvent::Raw(
+                    format!("#footnote([{}])", label).into(),
+                )))
+            },
+            // Handle footnote content
+            // (_, Some(ParserEvent::Markdown(MdEvent::FootnoteDefinition(label, content)))) => {
             //     // Convert footnote reference to Typst
+            //     println!("footnote ref: {}", label);
             //     Some(ParserEvent::Typst(TypstEvent::Raw(
-            //         format!("#footnote(ref: \"{}\")", label).into(),
+            //     format!("#footnote[{}]", content).into(),
             //     )))
             // },
-            // Handle footnote content
-            // Some(ParserEvent::Mdbook(MdbookEvent::MarkdownContentEvent(MdEvent::FootnoteDefinition(label, content)))) => {
-            //     // Convert footnote content to Typst format
-            //     Some(ParserEvent::Typst(TypstEvent::Raw(
-            //         format!("#footnote[{}]", content).into(),
-            //     )))
-            // }
+
 
             (_, x) => x,
         }

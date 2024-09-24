@@ -6,7 +6,10 @@ At every corner of its lines
 You should know that by now  
 Little markdown with two spaces
 
-At the end of your lines
+At the end of your lines  
+Here is a footnote reference.[^1]
+
+[^1]: This is the footnote content.
 
 ## Section 1
 

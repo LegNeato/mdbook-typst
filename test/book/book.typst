@@ -22,7 +22,9 @@
 At every corner of its lines]
 #par()[You should know that by now\
 Little markdown with two spaces]
-#par()[At the end of your lines]
+#par()[At the end of your lines\
+Here is a footnote reference.[^1]]
+#par()[[^1]: This is the footnote content.]
 === Section 1
 #par()[Test]
 #align(center, line(length: 60%))
