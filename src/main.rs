@@ -62,6 +62,7 @@ fn main() -> Result<(), std::io::Error> {
     events = Box::new(FixHeadingStutter::new(events));
 
     // Detect md *** rule and convert them into Typst #line.
+    // Could be moved into PartToCoverPage ???
 
     events = Box::new(events.map(|event| match event {
         // Detect horizontal rule (hr) in markdown.

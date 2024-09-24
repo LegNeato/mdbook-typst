@@ -92,7 +92,13 @@ where
             (_, Some(ParserEvent::Typst(TypstEvent::Parbreak))) => {
                 println!("Replacing Parbreak with \\\n");
                 Some(ParserEvent::Typst(TypstEvent::Raw("\\\n".into())))
+            },
+            // fix quotes ending with a newline
+            (_, Some(ParserEvent::Typst(TypstEvent::End(TypstTag::Quote(..))))) => {
+                println!("Ending a quote block without extra newline");
+                Some(ParserEvent::Typst(TypstEvent::Raw("]\n".into()))) // No newline here
             }
+            
 
             (_, x) => x,
         }

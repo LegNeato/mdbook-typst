@@ -21,15 +21,20 @@
 #par()[A poem is with line break\
 At every corner of its lines]
 #par()[You should know that by now\
-Little markdown with two spaces\
-At the end of your lines]
+Little markdown with two spaces]
+#par()[At the end of your lines]
 === Section 1
 #par()[Test]
 #align(center, line(length: 60%))
+#par()[This is a quote below with other text below]
+#quote(block: true, quotes: auto,)[#par()[A nice quote my firend]
+]
+#par()[And another line that is not a quote]
 === Section 2
 #par()[Test with a quote below: ]
 #quote(block: true, quotes: auto,)[#par()[this is a quote]
-]== Chapter 2
+]
+== Chapter 2
 #par()[Test]
 #align(center, line(length: 60%))
 #par()[Test]
