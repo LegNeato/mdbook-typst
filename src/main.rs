@@ -375,7 +375,9 @@ fn main() -> Result<(), std::io::Error> {
     // Write the Typst markup to filesystem.
     let mut f = File::create(&markup_path).unwrap();
     for m in markup {
-        write!(f, "{}", m)?;
+        let updated_markup = m.replace(r"\#footnote", "#footnote");
+        write!(f, "{}", updated_markup)?;
+        //write!(f, "{}", m)?;
     }
 
     // Command to use to call the `typst` binary for further processing if required.
