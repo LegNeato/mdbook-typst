@@ -7,7 +7,7 @@ You should know that by now
 Little markdown with two spaces
 
 At the end of your lines  
-Here is a footnote reference.[^1]
+Here is a footnote reference[^1].
 
 [^1]: This is the footnote content.
 
@@ -26,6 +26,12 @@ This is a quote below with other text below
 > A nice quote my firend
 
 And another line that is not a quote
+
+A very nice sentence with a footnote here[^this] that talks about your empire.
+
+And another par before the footnote content
+
+[^this]: This is the way it is!
 
 ## Section 2
 

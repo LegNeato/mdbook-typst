@@ -23,8 +23,8 @@ At every corner of its lines]
 #par()[You should know that by now\
 Little markdown with two spaces]
 #par()[At the end of your lines\
-Here is a footnote reference.[^1]]
-#par()[[^1]: This is the footnote content.]
+Here is a footnote reference#footnote[This is the footnote content.].]
+#par()[]
 === Section 1
 #par()[Test]
 #align(center, line(length: 60%))
@@ -34,35 +34,14 @@ Here is a footnote reference.[^1]]
 #quote(block: true, quotes: auto,)[#par()[A nice quote my firend]
 ]
 #par()[And another line that is not a quote]
+#par()[A very nice sentence with a footnote here#footnote[This is the way it is!] that talks about your empire.]
+#par()[And another par before the footnote content]
+#par()[]
 === Section 2
 #par()[Test with a quote below: ]
 #quote(block: true, quotes: auto,)[#par()[this is a quote]
 ]
 === There ca be no two first level heading in a md file!
-#par()[Test]
-#align(center, line(length: 60%))
-#par()[Test]
-==== Sub Section You Name It
-#pagebreak(weak: true)
-= Chapter 2
-#par()[A poem is with line break\
-At every corner of its lines]
-#par()[You should know that by now\
-Little markdown with two spaces]
-#par()[At the end of your lines]
-=== Section 1
-#par()[Test]
-#align(center, line(length: 60%))
-#par()[Under the start]
-==== Sub-Section 1
-#par()[This is a quote below with other text below]
-#quote(block: true, quotes: auto,)[#par()[A nice quote my firend]
-]
-#par()[And another line that is not a quote]
-=== Section 2
-#par()[Test with a quote below: ]
-#quote(block: true, quotes: auto,)[#par()[this is a quote]
-]
 #par()[Test]
 #align(center, line(length: 60%))
 #par()[Test]

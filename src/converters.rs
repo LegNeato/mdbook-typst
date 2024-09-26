@@ -1,10 +1,63 @@
 use std::marker::PhantomData;
+use std::collections::HashMap;
+use regex::Regex;
 
 use pullup::converter;
 use pullup::markdown::{Event as MdEvent, Tag as MdTag};
 use pullup::mdbook::{Event as MdbookEvent, Tag as MdbookTag};
 use pullup::typst::{Event as TypstEvent, Tag as TypstTag};
 use pullup::ParserEvent;
+
+/// Convert markdown footnote to Typst footnotes.
+
+pub fn process_events<'a>(events: impl Iterator<Item = ParserEvent<'a>>) -> Vec<ParserEvent<'a>> {
+    let mut footnote_definitions = HashMap::new();
+    let mut processed_events = vec![];
+
+    // First pass: Collect footnote definitions
+    for event in events {
+        if let ParserEvent::Typst(TypstEvent::Text(ref text)) = event {
+            let re = Regex::new(r"\[\^([^\s\]]+)\]:\s*(.*)").unwrap();  // Compile regex pattern to match any word (not just digits)
+
+            if let Some(captures) = re.captures(text) {
+                let footnote_label = captures[1].to_string();
+                let footnote_content = captures[2].to_string();
+                footnote_definitions.insert(footnote_label, footnote_content);
+                continue;
+            }
+        }
+        processed_events.push(event);
+    }
+
+    // Second pass: Replace footnote references
+    let mut final_events = Vec::new();
+    for event in processed_events {
+        if let ParserEvent::Typst(TypstEvent::Text(ref text)) = event {
+            let re = Regex::new(r"\[\^([^\s\]]+)\]").unwrap();  // Compile regex pattern to match any word (not just digits)
+
+            let updated_text = re.replace_all(text, |caps: &regex::Captures| {
+                let label = &caps[1];
+                if let Some(content) = footnote_definitions.get(label) {
+                    let footnote_reference = format!("#footnote[{}]", content);  // Format the footnote correctly
+                    println!("Footnote Reference: {}", footnote_reference);  // Print the footnote reference
+                    footnote_reference  // Return the formatted reference
+                    //format!(r"#footnote[{}]", content)
+                } else {
+                    println!("Footnote not found for label: {}", label);  // Print a message if not found
+                    caps[0].to_string() // Fallback if footnote not found
+                }
+            });
+
+            // Ensure ownership of the updated_text
+            println!("Updated Text: {}", updated_text);  // Print the updated text
+            final_events.push(ParserEvent::Typst(TypstEvent::Text(updated_text.into_owned().into())));
+        } else {
+            final_events.push(event);
+        }
+    }
+
+    final_events
+}
 
 /// Convert mdBook parts to chapters with cover pages.
 #[derive(Debug)]
@@ -37,10 +90,10 @@ where
     fn next(&mut self) -> Option<Self::Item> {
 
         // for debugging uncomment below:
-        // let next_event = self.iter.next();
-        // println!("PartToCoverPage: Processing event: {:?}", next_event);
-        // match (self.in_part, next_event) {
-        match (self.in_part, self.iter.next()) {
+        let next_event = self.iter.next();
+        println!("2. {:?}", next_event);
+        match (self.in_part, next_event) {
+        // match (self.in_part, self.iter.next()) {
             (_, Some(ParserEvent::Mdbook(MdbookEvent::Start(MdbookTag::Part(name, _))))) => {
                 if let Some(name) = name {
                     self.in_part = true;
@@ -102,25 +155,6 @@ where
                 Some(ParserEvent::Typst(TypstEvent::Raw(
                     "#align(center, line(length: 60%))\n".into())))
             },
-            // Handle footnote reference
-            // TODO: This is not working at the moment.
-            (_, Some(ParserEvent::Markdown(MdEvent::FootnoteReference(label)))) => {
-                // Convert footnote reference to Typst
-                println!("footnote ref: {:?}", label);
-                Some(ParserEvent::Typst(TypstEvent::Raw(
-                    format!("#footnote([{}])", label).into(),
-                )))
-            },
-            // Handle footnote content
-            // (_, Some(ParserEvent::Markdown(MdEvent::FootnoteDefinition(label, content)))) => {
-            //     // Convert footnote reference to Typst
-            //     println!("footnote ref: {}", label);
-            //     Some(ParserEvent::Typst(TypstEvent::Raw(
-            //     format!("#footnote[{}]", content).into(),
-            //     )))
-            // },
-
-
             (_, x) => x,
         }
     }

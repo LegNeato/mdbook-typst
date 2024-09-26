@@ -12,7 +12,7 @@ mod config;
 mod converters;
 
 use config::Config;
-use converters::{FixHeadingStutter, PartToCoverPage};
+use converters::{FixHeadingStutter, PartToCoverPage, process_events};
 
 fn none_on_empty(x: &String) -> Option<String> {
     if x.is_empty() {
@@ -57,9 +57,16 @@ fn main() -> Result<(), std::io::Error> {
     //panic!("x");
 
     // Run some special converters.
+
+    // Step 1: Use the process_events function
+    let processed_events = process_events(events);
+
+    // Step 2: Box the processed events into an iterator, similar to how you use PartToCoverPage
+    events = Box::new(processed_events.into_iter()); // Convert the Vec into an iterator
+
     events = Box::new(PartToCoverPage::new(events));
 
-    events = Box::new(FixHeadingStutter::new(events));
+    events = Box::new(FixHeadingStutter::new(events)); 
 
     // Figure out the output filename and location.
     let outname = if let Some(n) = cfg.output.name {

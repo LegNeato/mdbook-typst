@@ -19,3 +19,4 @@ pullup = { version = "0.3.5", features = [
     "tracing"
 ] }
 serde = { version = "1.0", features = ["derive"] }
+regex = "1.8"  # Use the latest version or a version compatible with your project
