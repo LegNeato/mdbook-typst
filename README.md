@@ -68,3 +68,23 @@ export PATH=$(pwd)/target/release:$PATH
 ```
 
 will Override the Global `mdbook-typst` Command Temporarily in your current terminal window.
+
+no styling : 
+
+```
+[output.typst.style]
+no_style = false
+```
+
+will remove all the styling
+
+simple headings and part as natural header level : 
+
+```
+[output.typst.style]
+simple = true
+```
+
+will make the part of the mdbook as first heading
+
+You can custom with set and show rules what you want.

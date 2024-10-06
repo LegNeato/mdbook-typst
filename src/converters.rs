@@ -39,17 +39,17 @@ pub fn process_events<'a>(events: impl Iterator<Item = ParserEvent<'a>>) -> Vec<
                 let label = &caps[1];
                 if let Some(content) = footnote_definitions.get(label) {
                     let footnote_reference = format!("#footnote[{}]", content);  // Format the footnote correctly
-                    println!("Footnote Reference: {}", footnote_reference);  // Print the footnote reference
+                    // println!("Footnote Reference: {}", footnote_reference);  // Print the footnote reference
                     footnote_reference  // Return the formatted reference
                     //format!(r"#footnote[{}]", content)
                 } else {
-                    println!("Footnote not found for label: {}", label);  // Print a message if not found
+                    // println!("Footnote not found for label: {}", label);  // Print a message if not found
                     caps[0].to_string() // Fallback if footnote not found
                 }
             });
 
             // Ensure ownership of the updated_text
-            println!("Updated Text: {}", updated_text);  // Print the updated text
+            // println!("Updated Text: {}", updated_text);  // Print the updated text
             final_events.push(ParserEvent::Typst(TypstEvent::Text(updated_text.into_owned().into())));
         } else {
             final_events.push(event);
@@ -90,10 +90,10 @@ where
     fn next(&mut self) -> Option<Self::Item> {
 
         // for debugging uncomment below:
-        let next_event = self.iter.next();
-        println!("2. {:?}", next_event);
-        match (self.in_part, next_event) {
-        // match (self.in_part, self.iter.next()) {
+        // let next_event = self.iter.next();
+        // println!("2. {:?}", next_event);
+        // match (self.in_part, next_event) {
+        match (self.in_part, self.iter.next()) {
             (_, Some(ParserEvent::Mdbook(MdbookEvent::Start(MdbookTag::Part(name, _))))) => {
                 if let Some(name) = name {
                     self.in_part = true;
@@ -110,6 +110,98 @@ where
                         )
                         {}"#,
                             name, name, '\n'
+                        )
+                        .into(),
+                    )))
+                } else {
+                    self.in_part = false;
+                    self.next()
+                }
+            }
+            (_, Some(ParserEvent::Mdbook(MdbookEvent::End(MdbookTag::Part(_, _))))) => {
+                self.in_part = false;
+                Some(ParserEvent::Typst(TypstEvent::FunctionCall(
+                    None,
+                    "pagebreak".into(),
+                    vec!["weak: true".into()],
+                )))
+            }
+            (
+                true,
+                Some(ParserEvent::Typst(TypstEvent::Start(TypstTag::Heading(num, toc, bookmarks)))),
+            ) => Some(ParserEvent::Typst(TypstEvent::Start(TypstTag::Heading(
+                num.saturating_add(1),
+                toc,
+                bookmarks,
+            )))),
+            (
+                true,
+                Some(ParserEvent::Typst(TypstEvent::End(TypstTag::Heading(num, toc, bookmarks)))),
+            ) => Some(ParserEvent::Typst(TypstEvent::End(TypstTag::Heading(
+                num.saturating_add(1),
+                toc,
+                bookmarks,
+            )))),
+            // Here, we replace Parbreak with the correct raw event.
+            (_, Some(ParserEvent::Typst(TypstEvent::Parbreak))) => {
+                Some(ParserEvent::Typst(TypstEvent::Raw("\\\n".into())))
+            },
+            // fix quotes ending with a newline
+            (_, Some(ParserEvent::Typst(TypstEvent::End(TypstTag::Quote(..))))) => {
+                Some(ParserEvent::Typst(TypstEvent::Raw("]\n".into()))) // No newline here
+            },
+            // Detect horizontal rule (hr) in markdown.
+            (_, Some(ParserEvent::Markdown(MdEvent::Rule))) => {
+                Some(ParserEvent::Typst(TypstEvent::Raw(
+                    "#align(center, line(length: 60%))\n".into())))
+            },
+            (_, x) => x,
+        }
+    }
+}
+
+/// Convert mdBook parts to chapters with cover pages. SIMPLE VERSION
+#[derive(Debug)]
+pub struct PartToCoverPageSimple<'a, T> {
+    in_part: bool,
+    iter: T,
+    _p: PhantomData<&'a ()>,
+}
+
+impl<'a, T> PartToCoverPageSimple<'a, T>
+where
+    T: Iterator<Item = ParserEvent<'a>>,
+{
+    #[allow(dead_code)]
+    pub fn new(iter: T) -> Self {
+        Self {
+            in_part: false,
+            iter,
+            _p: PhantomData,
+        }
+    }
+}
+
+impl<'a, T> Iterator for PartToCoverPageSimple<'a, T>
+where
+    T: Iterator<Item = ParserEvent<'a>>,
+{
+    type Item = ParserEvent<'a>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+
+        // for debugging uncomment below:
+        // let next_event = self.iter.next();
+        // println!("2. {:?}", next_event);
+        // match (self.in_part, next_event) {
+        match (self.in_part, self.iter.next()) {
+            (_, Some(ParserEvent::Mdbook(MdbookEvent::Start(MdbookTag::Part(name, _))))) => {
+                if let Some(name) = name {
+                    self.in_part = true;
+                    Some(ParserEvent::Typst(TypstEvent::Raw(
+                        format!(
+                            r#"={} {}"#,
+                            name, '\n'
                         )
                         .into(),
                     )))
