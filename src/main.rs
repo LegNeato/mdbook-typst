@@ -69,9 +69,9 @@ fn main() -> Result<(), std::io::Error> {
     .simple
     .unwrap_or_else(|| config::default_style_simple().expect("a value"))
     {   
-        events = Box::new(PartToCoverPageSimple::new(events)); 
+        events = Box::new(PartToCoverPageSimple::new(events)); // I could not find how to pass cfg.style.simple to PartToCoverPage
     } else { 
-        events = Box::new(PartToCoverPage::new(events)); 
+        events = Box::new(PartToCoverPage::new(events)); // So I made two functions. One for PartToCoverPage and one for PartToCoverPageSimple
     }
 
     events = Box::new(FixHeadingStutter::new(events)); 
