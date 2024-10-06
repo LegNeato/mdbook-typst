@@ -58,17 +58,6 @@ book using the [pullup](https://github.com/LegNeato/pullup) project.
 [book.toml]: https://rust-lang.github.io/mdBook/guide/creating.html#booktoml
 [Typst]: https://typst.app/docs/
 
-
-## Run a local version of this project
-
-Clone the repo and then `cargo build --release`
-
-```
-export PATH=$(pwd)/target/release:$PATH
-```
-
-will Override the Global `mdbook-typst` Command Temporarily in your current terminal window.
-
 ### No default styling
 
 ```
@@ -92,3 +81,13 @@ You can custom with set and show rules what you want.
 The best is to add another file as a template with your custom style. You can regenerate your main content and keep all you styling in a seperate file.
 
 See [Making a Template - Separate File](https://typst.app/docs/tutorial/making-a-template/#separate-file) for more information
+
+## Run a local version of this project
+
+Clone the repo and then `cargo build --release`
+
+```
+export PATH=$(pwd)/target/release:$PATH
+```
+
+will Override the Global `mdbook-typst` Command Temporarily in your current terminal window.
