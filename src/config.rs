@@ -6,6 +6,7 @@ pub struct Config {
     pub output: Output,
     pub style: Style,
     pub toc: Toc,
+    pub template: Template,
     pub advanced: Advanced,
 }
 
@@ -125,6 +126,26 @@ pub fn default_toc_entry_text_size() -> Option<String> {
 pub fn default_toc_entry_bold() -> Option<bool> {
     Some(true)
 }
+
+#[derive(Debug, Default, Serialize, Deserialize)]
+#[serde(default, rename_all = "kebab-case")]
+pub struct Template {
+    #[serde(default = "default_template_enable")]
+    pub enable: Option<bool>,
+    pub name: Option<String>,
+    pub arg: Option<String>,
+}
+
+pub fn default_template_enable() -> Option<bool> {
+    Some(false)
+}
+pub fn default_template_name() -> String {
+    "myTemplate".to_string()
+}
+pub fn default_template_arg() -> String {
+    "".to_string()
+}
+
 
 #[derive(Debug, Default, Serialize, Deserialize)]
 #[serde(default, rename_all = "kebab-case")]

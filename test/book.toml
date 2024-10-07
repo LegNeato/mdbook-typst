@@ -8,3 +8,18 @@ title = "Test Book"
 [output.typst.style]
 enable = false
 simple = true
+
+[output.typst.toc]
+enable = false
+
+[output.typst.template]
+enable = true
+name = "myTempalte.typ"
+arg = '''
+  title: [Dear Title],
+  author: "Your Author name",
+  dedication: [To you my friend\
+              and you],
+  publishing-info: [
+    copyright blablabla]
+'''

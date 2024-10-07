@@ -62,7 +62,7 @@ book using the [pullup](https://github.com/LegNeato/pullup) project.
 
 ```
 [output.typst.style]
-no_style = false
+enable = false
 ```
 
 will remove all the styling
@@ -82,7 +82,37 @@ The best is to add another file as a template with your custom style. You can re
 
 See [Making a Template - Separate File](https://typst.app/docs/tutorial/making-a-template/#separate-file) for more information
 
+### Template support.
+
+in your book.toml:
+
+```
+[output.typst.template]
+enable = true
+name = "myTempalte.typ"
+arg = '''
+  title: [Dear Title],
+  author: "Your Author name",
+  dedication: [To you my friend\
+              and you],
+  publishing-info: [
+    copyright blablabla]
+'''
+```
+
+You may have your own TOC in your template. you will need 
+
+```
+[output.typst.toc]
+enable = false
+```
+
+To removove the default toc
+
+
 ## Run a local version of this project
+
+### For release
 
 Clone the repo and then `cargo build --release`
 
@@ -91,3 +121,15 @@ export PATH=$(pwd)/target/release:$PATH
 ```
 
 will Override the Global `mdbook-typst` Command Temporarily in your current terminal window.
+
+### For debugging
+
+Another way to build for debugging is `cargo build`
+
+The path is then 
+
+```
+export PATH=$(pwd)/target/debug:$PATH
+```
+
+But this is not fit for pruduction.

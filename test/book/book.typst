@@ -1,3 +1,12 @@
+#import "myTempalte.typ": template
+#show: template.with(
+  title: [Dear Title],
+  author: "Your Author name",
+  dedication: [To you my friend\
+              and you],
+  publishing-info: [
+    copyright blablabla]
+)
 #set document(title: "Test Book")
 #set document(author: ("YourName"))
 =Part 1 

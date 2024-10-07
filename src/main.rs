@@ -108,9 +108,8 @@ fn main() -> Result<(), std::io::Error> {
 
     // Paper size.
 
-
     // Prepend the raw Typist markup header if we have one. 
-    // (you can skip this by adding no_style = true to your config)
+    // (you can skip this by adding style.enable = false to your config)
     if cfg
     .style
     .enable
@@ -281,101 +280,131 @@ fn main() -> Result<(), std::io::Error> {
                 format!("#show link: set text({})\n", link_color).into(),
             )));
         }
+    }
+    
+    // -------- Table of Contents / Outline --------
+    let mut toc_events = vec![];
 
-        // -------- Table of Contents / Outline --------
-        let mut toc_events = vec![];
-
-        // Toc.
-        if cfg
+    // Toc.
+    if cfg
+        .toc
+        .enable
+        .unwrap_or_else(|| config::default_toc_enable().expect("a value"))
+    {
+        // Show rules.
+        if let Some(show_rules) = cfg
             .toc
-            .enable
-            .unwrap_or_else(|| config::default_toc_enable().expect("a value"))
+            .entry_show_rules
+            .as_ref()
+            .map_or(config::default_toc_entry_show_rules(), none_on_empty_vec)
         {
-            // Show rules.
-            if let Some(show_rules) = cfg
-                .toc
-                .entry_show_rules
-                .as_ref()
-                .map_or(config::default_toc_entry_show_rules(), none_on_empty_vec)
-            {
-                toc_events.extend(show_rules.into_iter().flat_map(|x| {
-                    let it = if x.strong.unwrap() {
-                        "strong(it)"
-                    } else {
-                        "it"
-                    };
-                    let tag = pullup::typst::Tag::Show(
-                        pullup::typst::ShowType::Function,
-                        format!("outline.entry.where(level: {})", x.level.unwrap()).into(),
-                        None,
-                        Some(
-                            format!(
-                                "it => {{
-                                        v({}, weak: true)
-                                    {} 
-                                    }}",
-                                x.text_size.unwrap(),
-                                it
-                            )
-                            .into(),
-                        ),
-                    );
-                    vec![
-                        pullup::ParserEvent::Typst(pullup::typst::Event::Start(tag.clone())),
-                        pullup::ParserEvent::Typst(pullup::typst::Event::End(tag)),
-                    ]
-                }));
-            }
-
-            let mut args: Vec<CowStr<'_>> = vec![];
-
-            // Depth.
-            if let Some(depth) = cfg
-                .toc
-                .depth
-                .as_ref()
-                .or(Some(&config::default_toc_depth()))
-            {
-                args.push(format!("depth: {}", depth).into())
-            }
-
-            // Indent.
-            if let Some(indent) = cfg
-                .toc
-                .indent
-                .as_ref()
-                .map_or(Some(config::default_toc_indent()), none_on_empty)
-            {
-                args.push(format!("indent: {}", indent).into())
-            }
-            toc_events.push(pullup::ParserEvent::Typst(
-                pullup::typst::Event::FunctionCall(None, "outline".into(), args),
-            ));
-            toc_events.push(pullup::ParserEvent::Typst(pullup::typst::Event::PageBreak));
+            toc_events.extend(show_rules.into_iter().flat_map(|x| {
+                let it = if x.strong.unwrap() {
+                    "strong(it)"
+                } else {
+                    "it"
+                };
+                let tag = pullup::typst::Tag::Show(
+                    pullup::typst::ShowType::Function,
+                    format!("outline.entry.where(level: {})", x.level.unwrap()).into(),
+                    None,
+                    Some(
+                        format!(
+                            "it => {{
+                                    v({}, weak: true)
+                                {} 
+                                }}",
+                            x.text_size.unwrap(),
+                            it
+                        )
+                        .into(),
+                    ),
+                );
+                vec![
+                    pullup::ParserEvent::Typst(pullup::typst::Event::Start(tag.clone())),
+                    pullup::ParserEvent::Typst(pullup::typst::Event::End(tag)),
+                ]
+            }));
         }
 
-        // Aggregate synthesized events in proper order.
-        events = Box::new(style_events.into_iter().chain(toc_events).chain(events));
+        let mut args: Vec<CowStr<'_>> = vec![];
 
-        // -------- Escape Hatches --------
-
-        // Prepend the raw Typist markup header if we have one.
-        if let Some(header) = cfg.advanced.typst_markup_header {
-            events = Box::new(
-                iter::once(pullup::ParserEvent::Typst(pullup::typst::Event::Raw(
-                    header.into(),
-                )))
-                .chain(events),
-            );
+        // Depth.
+        if let Some(depth) = cfg
+            .toc
+            .depth
+            .as_ref()
+            .or(Some(&config::default_toc_depth()))
+        {
+            args.push(format!("depth: {}", depth).into())
         }
 
-        // Append the raw Typst markup footer if we have one.
-        if let Some(footer) = cfg.advanced.typst_markup_footer {
-            events = Box::new(events.chain(iter::once(pullup::ParserEvent::Typst(
-                pullup::typst::Event::Raw(footer.into()),
-            ))));
+        // Indent.
+        if let Some(indent) = cfg
+            .toc
+            .indent
+            .as_ref()
+            .map_or(Some(config::default_toc_indent()), none_on_empty)
+        {
+            args.push(format!("indent: {}", indent).into())
+        }
+        toc_events.push(pullup::ParserEvent::Typst(
+            pullup::typst::Event::FunctionCall(None, "outline".into(), args),
+        ));
+        toc_events.push(pullup::ParserEvent::Typst(pullup::typst::Event::PageBreak));
+    }
+
+    // -------- Template --------let mut my_string = String::new();
+
+    let mut template = String::new();
+
+    if cfg
+        .template
+        .enable
+        .unwrap_or_else(|| config::default_template_enable().expect("a value"))
+    {
+        if let Some(name) = cfg
+            .template
+            .name
+            .as_ref()
+            .map_or(Some(config::default_template_name()), none_on_empty)
+        {
+            if let Some(arg) = cfg
+                .template
+                .arg
+                .as_ref()
+                .map_or(Some(config::default_template_arg()), none_on_empty)
+            {
+template = format!("#import \"{}\": template
+#show: template.with(
+{})
+", name, arg);
+            }   
         }
     }
+
+    // Aggregate synthesized events in proper order.
+    events = Box::new(style_events.into_iter().chain(toc_events).chain(events));
+
+    // -------- Escape Hatches --------
+
+    // Prepend the raw Typist markup header if we have one.
+    if let Some(header) = cfg.advanced.typst_markup_header {
+        events = Box::new(
+            iter::once(pullup::ParserEvent::Typst(pullup::typst::Event::Raw(
+                header.into(),
+            )))
+            .chain(events),
+        );
+    }
+
+    // Append the raw Typst markup footer if we have one.
+    if let Some(footer) = cfg.advanced.typst_markup_footer {
+        events = Box::new(events.chain(iter::once(pullup::ParserEvent::Typst(
+            pullup::typst::Event::Raw(footer.into()),
+        ))));
+    }
+    
 
     
 
@@ -399,6 +428,8 @@ fn main() -> Result<(), std::io::Error> {
 
     // Write the Typst markup to filesystem.
     let mut f = File::create(&markup_path).unwrap();
+    write!(f, "{}", template)?;
+
     for m in markup {
         let updated_markup = m.replace(r"\#footnote", "#footnote").replace(r"====", "==="); // dirty fixes 
         write!(f, "{}", updated_markup)?;
