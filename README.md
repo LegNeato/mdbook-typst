@@ -132,4 +132,4 @@ The path is then
 export PATH=$(pwd)/target/debug:$PATH
 ```
 
-But this is not fit for pruduction.
+But this is not fit for production.

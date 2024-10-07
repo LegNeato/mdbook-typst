@@ -64,6 +64,8 @@ Little markdown with two spaces]
 #par()[Test]
 ==== Sub Section You Name It
 #pagebreak(weak: true)
+#pagebreak(weak: true)
+=Part 2 
 == Chapter 3
 #par()[A poem is with line break\
 At every corner of its lines]
