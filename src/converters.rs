@@ -154,6 +154,26 @@ where
             (_, Some(ParserEvent::Markdown(MdEvent::Rule))) => {
                 Some(ParserEvent::Typst(TypstEvent::Raw(
                     "#align(center, line(length: 60%))\n".into())))
+            },            // Detect image.
+            (_, Some(ParserEvent::Markdown(MdEvent::Start(MdTag::Image(_, path, _))))) => {
+                    self.in_part = true;
+                    Some(ParserEvent::Typst(TypstEvent::Raw(
+                        format!(
+                            r#"]{}#figure(image("{}", height: 100%),{}caption: ["#,
+                            '\n', path, '\n'
+                        )
+                        .into(),
+                    )))  
+            },
+            (_, Some(ParserEvent::Markdown(MdEvent::End(MdTag::Image(_, _, _))))) => {
+                self.in_part = true;
+                Some(ParserEvent::Typst(TypstEvent::Raw(
+                    format!(
+                        r#"],){}#par()["#,
+                        '\n'
+                    )
+                    .into(),
+                )))  
             },
             (_, x) => x,
         }
@@ -191,10 +211,10 @@ where
     fn next(&mut self) -> Option<Self::Item> {
 
         // for debugging uncomment below:
-        let next_event = self.iter.next();
-        println!("{:?}", next_event);
-        match (self.in_part, next_event) {
-        // match (self.in_part, self.iter.next()) {
+        // let next_event = self.iter.next();
+        // println!("{:?}", next_event);
+        // match (self.in_part, next_event) {
+        match (self.in_part, self.iter.next()) {
             (_, Some(ParserEvent::Mdbook(MdbookEvent::Start(MdbookTag::Part(name, _))))) => {
                 if let Some(name) = name {
                     self.in_part = true;
