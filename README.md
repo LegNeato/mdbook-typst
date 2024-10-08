@@ -110,7 +110,7 @@ enable = false
 To removove the default toc
 
 
-## Run a local version of this project
+## Run a local version temporarly of this project
 
 ### For release
 
@@ -133,3 +133,11 @@ export PATH=$(pwd)/target/debug:$PATH
 ```
 
 But this is not fit for production.
+
+## Run a version globally and permanently on your machine
+
+```
+cargo install --path .
+```
+
+
