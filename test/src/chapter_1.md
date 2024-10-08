@@ -29,6 +29,8 @@ And another line that is not a quote
 
 A very nice sentence with a footnote here[^this] that talks about your empire.
 
+![Vador](./image.png)
+
 And another par before the footnote content
 
 [^this]: This is the way it is!

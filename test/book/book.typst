@@ -24,6 +24,10 @@ Here is a footnote reference#footnote[This is the footnote content.].]
 ]
 #par()[And another line that is not a quote]
 #par()[A very nice sentence with a footnote here#footnote[This is the way it is!] that talks about your empire.]
+#par()[]
+#figure(image("./image.png", height: 100%),
+caption: [Vador],)
+#par()[]
 #par()[And another par before the footnote content]
 #par()[]
 === Section 2
