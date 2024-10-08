@@ -269,13 +269,22 @@ where
             },            // Detect image.
             (_, Some(ParserEvent::Markdown(MdEvent::Start(MdTag::Image(_, path, _))))) => {
                     self.in_part = true;
+                    let (image_path, caption) = if let Some((before, after)) = path.split_once('$') {
+                        println!("Before: {}", before);
+                        println!("After: {}", after);
+                        (before.as_ref(), after)
+                    } else {
+                        println!("No $ symbol found in the path");
+                        (path.as_ref(), "")
+                    };
+                    
                     Some(ParserEvent::Typst(TypstEvent::Raw(
                         format!(
-                            r#"]{}#figure(image("{}", height: 100%),{}caption: ["#,
-                            '\n', path, '\n'
-                        )
-                        .into(),
-                    )))  
+                            r#"]{}#figure(image("{}", {}),{}caption: ["#,
+                            '\n', image_path, caption, '\n'
+                        ).into(),
+                    )))
+                    
             },
             (_, Some(ParserEvent::Markdown(MdEvent::End(MdTag::Image(_, _, _))))) => {
                 self.in_part = true;

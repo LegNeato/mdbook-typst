@@ -5,8 +5,7 @@ multilingual = false
 src = "src"
 title = "Test Book"
 
-[output.typst.output]
-format = "pdf"
+
 
 [output.typst.style]
 enable = false

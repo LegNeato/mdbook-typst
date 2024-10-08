@@ -25,7 +25,7 @@ Here is a footnote reference#footnote[This is the footnote content.].]
 #par()[And another line that is not a quote]
 #par()[A very nice sentence with a footnote here#footnote[This is the way it is!] that talks about your empire.]
 #par()[]
-#figure(image("./image.png", height: 100%),
+#figure(image("./image.png", ),
 caption: [Vador],)
 #par()[]
 #par()[And another par before the footnote content]
@@ -39,6 +39,10 @@ caption: [Vador],)
 #align(center, line(length: 60%))
 #par()[Test]
 ==== Sub Section You Name It
+#par()[]
+#figure(image("./image.png", height:50%),
+caption: [Vador2],)
+#par()[]
 #pagebreak(weak: true)
 == Chapter 2
 #par()[A poem is with line break\
