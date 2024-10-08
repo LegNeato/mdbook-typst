@@ -428,9 +428,13 @@ template = format!("#import \"{}\": template
 
     // Write the Typst markup to filesystem.
     let mut f = File::create(&markup_path).unwrap();
-    write!(f, "{}", template)?;
-
+    let mut templated_added = false;
+    
     for m in markup {
+        if !m.starts_with("#set") && templated_added == false{
+            write!(f, "{}", template)?;
+            templated_added = true;
+        }
         let updated_markup = m.replace(r"\#footnote", "#footnote").replace(r"====", "==="); // dirty fixes 
         write!(f, "{}", updated_markup)?;
         //write!(f, "{}", m)?;

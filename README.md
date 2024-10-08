@@ -100,6 +100,8 @@ arg = '''
 '''
 ```
 
+Note: the function in your `myTemplate.typ` file should be named `template`. 
+
 You may have your own TOC in your template. you will need 
 
 ```

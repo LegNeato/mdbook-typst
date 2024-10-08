@@ -1,15 +1,11 @@
-#import "myTempalte.typ": template
-#show: template.with(
-  title: [Dear Title],
-  author: "Your Author name",
-  dedication: [To you my friend\
-              and you],
-  publishing-info: [
-    copyright blablabla]
-)
 #set document(title: "Test Book")
 #set document(author: ("YourName"))
-=Part 1 
+#import "myTemplate.typ": template
+#show: template.with(
+  title: "Dear Title",
+  dedication: "To you my friend"
+)
+= Part 1
 == Chapter 1
 #par()[A poem is with line break\
 At every corner of its lines]
@@ -65,7 +61,7 @@ Little markdown with two spaces]
 ==== Sub Section You Name It
 #pagebreak(weak: true)
 #pagebreak(weak: true)
-=Part 2 
+= Part 2
 == Chapter 3
 #par()[A poem is with line break\
 At every corner of its lines]

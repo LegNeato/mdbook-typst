@@ -5,6 +5,9 @@ multilingual = false
 src = "src"
 title = "Test Book"
 
+[output.typst.output]
+format = "pdf"
+
 [output.typst.style]
 enable = false
 simple = true
@@ -14,12 +17,8 @@ enable = false
 
 [output.typst.template]
 enable = true
-name = "myTempalte.typ"
+name = "myTemplate.typ"
 arg = '''
-  title: [Dear Title],
-  author: "Your Author name",
-  dedication: [To you my friend\
-              and you],
-  publishing-info: [
-    copyright blablabla]
+  title: "Dear Title",
+  dedication: "To you my friend"
 '''

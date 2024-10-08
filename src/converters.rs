@@ -200,7 +200,7 @@ where
                     self.in_part = true;
                     Some(ParserEvent::Typst(TypstEvent::Raw(
                         format!(
-                            r#"={} {}"#,
+                            r#"= {}{}"#,
                             name, '\n'
                         )
                         .into(),
