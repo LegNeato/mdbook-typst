@@ -1,0 +1,23 @@
+[book]
+authors = ["YourName"]
+language = "en"
+multilingual = false
+src = "src"
+title = "Test Book"
+
+
+
+[output.typst.style]
+enable = false
+simple = true
+
+[output.typst.toc]
+enable = false
+
+[output.typst.template]
+enable = true
+name = "myTemplate.typ"
+arg = '''
+  title: "Dear Title",
+  dedication: "To you my friend"
+'''

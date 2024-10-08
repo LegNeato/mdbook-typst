@@ -1,0 +1,5 @@
+Some(Typst(Start(Paragraph)))
+Some(Markdown(Start(Image(Inline, Borrowed("./image.png"), Borrowed("")))))
+Some(Typst(Text(Boxed("Vador"))))
+Some(Markdown(End(Image(Inline, Borrowed("./image.png"), Borrowed("")))))
+Some(Typst(End(Paragraph)))

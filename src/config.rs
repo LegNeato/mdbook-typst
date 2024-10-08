@@ -6,6 +6,7 @@ pub struct Config {
     pub output: Output,
     pub style: Style,
     pub toc: Toc,
+    pub template: Template,
     pub advanced: Advanced,
 }
 
@@ -29,6 +30,10 @@ pub enum OutputFormat {
 #[derive(Debug, Default, Serialize, Deserialize)]
 #[serde(default, rename_all = "kebab-case")]
 pub struct Style {
+    #[serde(default = "default_style_enable")]
+    pub enable: Option<bool>,
+    #[serde(default = "default_style_simple")]
+    pub simple: Option<bool>,
     pub paper: Option<String>,
     pub text_size: Option<String>,
     pub text_font: Option<String>,
@@ -41,7 +46,12 @@ pub struct Style {
     pub link_underline: Option<bool>,
     pub link_color: Option<String>,
 }
-
+pub fn default_style_enable() -> Option<bool> {
+    Some(true)
+}
+pub fn default_style_simple() -> Option<bool> {
+    Some(false)
+}
 pub fn default_paper() -> String {
     "us-letter".to_string()
 }
@@ -69,6 +79,7 @@ pub fn default_link_underline() -> Option<bool> {
 pub fn default_link_color() -> String {
     "blue".to_string()
 }
+
 
 #[derive(Debug, Default, Serialize, Deserialize)]
 #[serde(default, rename_all = "kebab-case")]
@@ -115,6 +126,26 @@ pub fn default_toc_entry_text_size() -> Option<String> {
 pub fn default_toc_entry_bold() -> Option<bool> {
     Some(true)
 }
+
+#[derive(Debug, Default, Serialize, Deserialize)]
+#[serde(default, rename_all = "kebab-case")]
+pub struct Template {
+    #[serde(default = "default_template_enable")]
+    pub enable: Option<bool>,
+    pub name: Option<String>,
+    pub arg: Option<String>,
+}
+
+pub fn default_template_enable() -> Option<bool> {
+    Some(false)
+}
+pub fn default_template_name() -> String {
+    "myTemplate".to_string()
+}
+pub fn default_template_arg() -> String {
+    "".to_string()
+}
+
 
 #[derive(Debug, Default, Serialize, Deserialize)]
 #[serde(default, rename_all = "kebab-case")]

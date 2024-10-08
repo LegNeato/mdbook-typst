@@ -12,7 +12,7 @@ mod config;
 mod converters;
 
 use config::Config;
-use converters::{FixHeadingStutter, PartToCoverPage};
+use converters::{FixHeadingStutter, PartToCoverPage, PartToCoverPageSimple, process_events};
 
 fn none_on_empty(x: &String) -> Option<String> {
     if x.is_empty() {
@@ -57,9 +57,24 @@ fn main() -> Result<(), std::io::Error> {
     //panic!("x");
 
     // Run some special converters.
-    events = Box::new(PartToCoverPage::new(events));
 
-    events = Box::new(FixHeadingStutter::new(events));
+    // Step 1: Use the process_events function
+    let processed_events = process_events(events);
+
+    // Step 2: Box the processed events into an iterator, similar to how you use PartToCoverPage
+    events = Box::new(processed_events.into_iter()); // Convert the Vec into an iterator
+
+    if cfg
+    .style
+    .simple
+    .unwrap_or_else(|| config::default_style_simple().expect("a value"))
+    {   
+        events = Box::new(PartToCoverPageSimple::new(events)); // I could not find how to pass cfg.style.simple to PartToCoverPage
+    } else { 
+        events = Box::new(PartToCoverPage::new(events)); // So I made two functions. One for PartToCoverPage and one for PartToCoverPageSimple
+    }
+
+    events = Box::new(FixHeadingStutter::new(events)); 
 
     // Figure out the output filename and location.
     let outname = if let Some(n) = cfg.output.name {
@@ -92,167 +107,181 @@ fn main() -> Result<(), std::io::Error> {
     let mut style_events = vec![];
 
     // Paper size.
-    if let Some(paper) = cfg
-        .style
-        .paper
-        .as_ref()
-        .map_or(Some(config::default_paper()), none_on_empty)
-    {
-        style_events.push(pullup::ParserEvent::Typst(pullup::typst::Event::Set(
-            "page".into(),
-            "paper".into(),
-            format!("\"{}\"", paper).into(),
-        )));
-    }
 
-    // Text size.
-    if let Some(text_size) = cfg
-        .style
-        .text_size
-        .as_ref()
-        .map_or(Some(config::default_text_size()), none_on_empty)
-    {
-        style_events.push(pullup::ParserEvent::Typst(pullup::typst::Event::Set(
-            "text".into(),
-            "size".into(),
-            text_size.into(),
-        )));
-    }
-
-    // Text font.
-    if let Some(text_font) = cfg
-        .style
-        .text_font
-        .as_ref()
-        .map_or(Some(config::default_text_font()), none_on_empty)
-    {
-        style_events.push(pullup::ParserEvent::Typst(pullup::typst::Event::Set(
-            "text".into(),
-            "font".into(),
-            format!("\"{}\"", text_font).into(),
-        )));
-    }
-
-    // Paragraph spacing.
-    if let Some(paragraph_spacing) = cfg
-        .style
-        .paragraph_spacing
-        .as_ref()
-        .map_or(Some(config::default_paragraph_spacing()), none_on_empty)
-    {
-        let tag = pullup::typst::Tag::Show(
-            pullup::typst::ShowType::ShowSet,
-            "par".into(),
-            Some(("block".into(), "spacing".into(), paragraph_spacing.into())),
-            None,
-        );
-        style_events.push(pullup::ParserEvent::Typst(pullup::typst::Event::Start(
-            tag.clone(),
-        )));
-        style_events.push(pullup::ParserEvent::Typst(pullup::typst::Event::End(tag)));
-    }
-
-    // Paragraph leading.
-    if let Some(paragraph_leading) = cfg
-        .style
-        .paragraph_leading
-        .as_ref()
-        .map_or(Some(config::default_paragraph_leading()), none_on_empty)
-    {
-        style_events.push(pullup::ParserEvent::Typst(pullup::typst::Event::Set(
-            "par".into(),
-            "leading".into(),
-            paragraph_leading.into(),
-        )));
-    }
-
-    // Heading numbering.
-    // Note this is a bit different as we don't set a default.
-    if let Some(heading_numbering) = cfg.style.heading_numbering.as_ref().and_then(none_on_empty) {
-        style_events.push(pullup::ParserEvent::Typst(pullup::typst::Event::Set(
-            "heading".into(),
-            "numbering".into(),
-            format!("\"{}\"", heading_numbering).into(),
-        )));
-    }
-
-    // Heading above/below. Must be emitted together.
-    // TODO: strongly type the event.
-    let heading_above = cfg
-        .style
-        .heading_above
-        .as_ref()
-        .map_or(Some(config::default_heading_above()), none_on_empty);
-    let heading_below = cfg
-        .style
-        .heading_below
-        .as_ref()
-        .map_or(Some(config::default_heading_below()), none_on_empty);
-    match (heading_above, heading_below) {
-        (None, None) => (),
-        (None, Some(below)) => {
-            style_events.push(pullup::ParserEvent::Typst(pullup::typst::Event::Raw(
-                format!(
-                    "
-        #show heading: it => [
-            #block(below: {}, it)
-        ]\n",
-                    below
-                )
-                .into(),
-            )));
-        }
-        (Some(above), None) => {
-            style_events.push(pullup::ParserEvent::Typst(pullup::typst::Event::Raw(
-                format!(
-                    "
-        #show heading: it => [
-            #block(above: {}, it)
-        ]\n",
-                    above
-                )
-                .into(),
-            )));
-        }
-        (Some(above), Some(below)) => {
-            style_events.push(pullup::ParserEvent::Typst(pullup::typst::Event::Raw(
-                format!(
-                    "
-        #show heading: it => [
-            #block(above: {}, below: {}, it)
-        ]\n",
-                    above, below,
-                )
-                .into(),
-            )));
-        }
-    }
-
-    // Link underline.
-    // TODO: strongly type the event.
+    // Prepend the raw Typist markup header if we have one. 
+    // (you can skip this by adding style.enable = false to your config)
     if cfg
-        .style
-        .link_underline
-        .unwrap_or_else(|| config::default_link_underline().expect("a value"))
-    {
-        style_events.push(pullup::ParserEvent::Typst(pullup::typst::Event::Raw(
-            "#show link: underline\n".into(),
-        )));
-    }
+    .style
+    .enable
+    .unwrap_or_else(|| config::default_style_enable().expect("a value"))
+    {   
 
-    // Link color.
-    // TODO: strongly type the event.
-    if let Some(link_color) = cfg
-        .style
-        .link_color
-        .as_ref()
-        .map_or(Some(config::default_link_color()), none_on_empty)
-    {
-        style_events.push(pullup::ParserEvent::Typst(pullup::typst::Event::Raw(
-            format!("#show link: set text({})\n", link_color).into(),
-        )));
-    }
+        println!("Generating styled book");
 
+
+        // Paper size.
+        if let Some(paper) = cfg
+            .style
+            .paper
+            .as_ref()
+            .map_or(Some(config::default_paper()), none_on_empty)
+        {
+            style_events.push(pullup::ParserEvent::Typst(pullup::typst::Event::Set(
+                "page".into(),
+                "paper".into(),
+                format!("\"{}\"", paper).into(),
+            )));
+        }
+
+        // Text size.
+        if let Some(text_size) = cfg
+            .style
+            .text_size
+            .as_ref()
+            .map_or(Some(config::default_text_size()), none_on_empty)
+        {
+            style_events.push(pullup::ParserEvent::Typst(pullup::typst::Event::Set(
+                "text".into(),
+                "size".into(),
+                text_size.into(),
+            )));
+        }
+
+        // Text font.
+        if let Some(text_font) = cfg
+            .style
+            .text_font
+            .as_ref()
+            .map_or(Some(config::default_text_font()), none_on_empty)
+        {
+            style_events.push(pullup::ParserEvent::Typst(pullup::typst::Event::Set(
+                "text".into(),
+                "font".into(),
+                format!("\"{}\"", text_font).into(),
+            )));
+        }
+
+        // Paragraph spacing.
+        if let Some(paragraph_spacing) = cfg
+            .style
+            .paragraph_spacing
+            .as_ref()
+            .map_or(Some(config::default_paragraph_spacing()), none_on_empty)
+        {
+            let tag = pullup::typst::Tag::Show(
+                pullup::typst::ShowType::ShowSet,
+                "par".into(),
+                Some(("block".into(), "spacing".into(), paragraph_spacing.into())),
+                None,
+            );
+            style_events.push(pullup::ParserEvent::Typst(pullup::typst::Event::Start(
+                tag.clone(),
+            )));
+            style_events.push(pullup::ParserEvent::Typst(pullup::typst::Event::End(tag)));
+        }
+
+        // Paragraph leading.
+        if let Some(paragraph_leading) = cfg
+            .style
+            .paragraph_leading
+            .as_ref()
+            .map_or(Some(config::default_paragraph_leading()), none_on_empty)
+        {
+            style_events.push(pullup::ParserEvent::Typst(pullup::typst::Event::Set(
+                "par".into(),
+                "leading".into(),
+                paragraph_leading.into(),
+            )));
+        }
+
+        // Heading numbering.
+        // Note this is a bit different as we don't set a default.
+        if let Some(heading_numbering) = cfg.style.heading_numbering.as_ref().and_then(none_on_empty) {
+            style_events.push(pullup::ParserEvent::Typst(pullup::typst::Event::Set(
+                "heading".into(),
+                "numbering".into(),
+                format!("\"{}\"", heading_numbering).into(),
+            )));
+        }
+
+        // Heading above/below. Must be emitted together.
+        // TODO: strongly type the event.
+        let heading_above = cfg
+            .style
+            .heading_above
+            .as_ref()
+            .map_or(Some(config::default_heading_above()), none_on_empty);
+        let heading_below = cfg
+            .style
+            .heading_below
+            .as_ref()
+            .map_or(Some(config::default_heading_below()), none_on_empty);
+        match (heading_above, heading_below) {
+            (None, None) => (),
+            (None, Some(below)) => {
+                style_events.push(pullup::ParserEvent::Typst(pullup::typst::Event::Raw(
+                    format!(
+                        "
+            #show heading: it => [
+                #block(below: {}, it)
+            ]\n",
+                        below
+                    )
+                    .into(),
+                )));
+            }
+            (Some(above), None) => {
+                style_events.push(pullup::ParserEvent::Typst(pullup::typst::Event::Raw(
+                    format!(
+                        "
+            #show heading: it => [
+                #block(above: {}, it)
+            ]\n",
+                        above
+                    )
+                    .into(),
+                )));
+            }
+            (Some(above), Some(below)) => {
+                style_events.push(pullup::ParserEvent::Typst(pullup::typst::Event::Raw(
+                    format!(
+                        "
+            #show heading: it => [
+                #block(above: {}, below: {}, it)
+            ]\n",
+                        above, below,
+                    )
+                    .into(),
+                )));
+            }
+        }
+
+        // Link underline.
+        // TODO: strongly type the event.
+        if cfg
+            .style
+            .link_underline
+            .unwrap_or_else(|| config::default_link_underline().expect("a value"))
+        {
+            style_events.push(pullup::ParserEvent::Typst(pullup::typst::Event::Raw(
+                "#show link: underline\n".into(),
+            )));
+        }
+
+        // Link color.
+        // TODO: strongly type the event.
+        if let Some(link_color) = cfg
+            .style
+            .link_color
+            .as_ref()
+            .map_or(Some(config::default_link_color()), none_on_empty)
+        {
+            style_events.push(pullup::ParserEvent::Typst(pullup::typst::Event::Raw(
+                format!("#show link: set text({})\n", link_color).into(),
+            )));
+        }
+    }
+    
     // -------- Table of Contents / Outline --------
     let mut toc_events = vec![];
 
@@ -283,7 +312,7 @@ fn main() -> Result<(), std::io::Error> {
                         format!(
                             "it => {{
                                     v({}, weak: true)
-                                   {} 
+                                {} 
                                 }}",
                             x.text_size.unwrap(),
                             it
@@ -325,6 +354,35 @@ fn main() -> Result<(), std::io::Error> {
         toc_events.push(pullup::ParserEvent::Typst(pullup::typst::Event::PageBreak));
     }
 
+    // -------- Template --------let mut my_string = String::new();
+
+    let mut template = String::new();
+
+    if cfg
+        .template
+        .enable
+        .unwrap_or_else(|| config::default_template_enable().expect("a value"))
+    {
+        if let Some(name) = cfg
+            .template
+            .name
+            .as_ref()
+            .map_or(Some(config::default_template_name()), none_on_empty)
+        {
+            if let Some(arg) = cfg
+                .template
+                .arg
+                .as_ref()
+                .map_or(Some(config::default_template_arg()), none_on_empty)
+            {
+template = format!("#import \"{}\": template
+#show: template.with(
+{})
+", name, arg);
+            }   
+        }
+    }
+
     // Aggregate synthesized events in proper order.
     events = Box::new(style_events.into_iter().chain(toc_events).chain(events));
 
@@ -346,6 +404,9 @@ fn main() -> Result<(), std::io::Error> {
             pullup::typst::Event::Raw(footer.into()),
         ))));
     }
+    
+
+    
 
     // -------- Output --------
 
@@ -367,8 +428,16 @@ fn main() -> Result<(), std::io::Error> {
 
     // Write the Typst markup to filesystem.
     let mut f = File::create(&markup_path).unwrap();
+    let mut templated_added = false;
+    
     for m in markup {
-        write!(f, "{}", m)?;
+        if !m.starts_with("#set") && templated_added == false{
+            write!(f, "{}", template)?;
+            templated_added = true;
+        }
+        let updated_markup = m.replace(r"\#footnote", "#footnote").replace(r"====", "==="); // dirty fixes 
+        write!(f, "{}", updated_markup)?;
+        //write!(f, "{}", m)?;
     }
 
     // Command to use to call the `typst` binary for further processing if required.
