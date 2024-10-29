@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 pub struct Config {
     pub output: Output,
     pub style: Style,
+    pub markup: Markup,
     pub toc: Toc,
     pub advanced: Advanced,
 }
@@ -68,6 +69,16 @@ pub fn default_link_underline() -> Option<bool> {
 }
 pub fn default_link_color() -> String {
     "blue".to_string()
+}
+
+#[derive(Debug, Default, Serialize, Deserialize)]
+#[serde(default, rename_all = "kebab-case")]
+pub struct Markup {
+    pub horizontal_rule: Option<String>,
+}
+
+pub fn default_markup_horizontal_rule() -> String {
+    "#v(1em)\n#line(length: 100%)\n#v(1em)".to_string()
 }
 
 #[derive(Debug, Default, Serialize, Deserialize)]

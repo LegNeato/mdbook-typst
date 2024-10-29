@@ -4,6 +4,7 @@ use std::iter;
 
 use mdbook::renderer::RenderContext;
 use pullup::markdown::CowStr;
+use pullup::markdown::Event as MdEvent;
 use pullup::typst::to::markup::TypstMarkup;
 use pullup::typst::TypstFilter;
 use pullup::ParserEvent;
@@ -42,6 +43,8 @@ fn main() -> Result<(), std::io::Error> {
         .get_deserialized_opt("output.typst")
         .expect("output.typst config")
         .unwrap_or_default();
+
+    let horizontal_rule_replacement: String;
 
     // Parse mdbook to events.
     let parser = pullup::mdbook::Parser::from_rendercontext(&ctx);
@@ -251,6 +254,25 @@ fn main() -> Result<(), std::io::Error> {
         style_events.push(pullup::ParserEvent::Typst(pullup::typst::Event::Raw(
             format!("#show link: set text({})\n", link_color).into(),
         )));
+    }
+
+    // -------- Replacements --------
+    // Note that if cfg item is not set we use default, and if set
+    // to empty string we don't include the output at all.
+
+    // Horizontal rule replacement. This is required as Typst doesn't have the concept
+    // of a horizontal rule (unlike Markdown and HTML).
+    if let Some(rule) = cfg.markup.horizontal_rule.as_ref().map_or(
+        Some(config::default_markup_horizontal_rule()),
+        none_on_empty,
+    ) {
+        horizontal_rule_replacement = rule;
+        events = Box::new(events.map(|e| match e {
+            pullup::ParserEvent::Markdown(MdEvent::Rule) => pullup::ParserEvent::Typst(
+                pullup::typst::Event::Raw(horizontal_rule_replacement.clone().into()),
+            ),
+            _ => e,
+        }));
     }
 
     // -------- Table of Contents / Outline --------
