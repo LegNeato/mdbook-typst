@@ -595,9 +595,9 @@ dependencies = [
 
 [[package]]
 name = "pulldown_typst"
-version = "0.3.6"
+version = "0.3.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "27cea207751edd3c8d2f6d3a1312107a2de7bf229ea30c57d830e454b6629216"
+checksum = "9d4d45d619f17939cc6e8c89ec40130ac09e12e26829b94bf0e0e005a2ceec8e"
 dependencies = [
  "pulldown-cmark 0.9.6",
  "tracing",
@@ -605,9 +605,9 @@ dependencies = [
 
 [[package]]
 name = "pullup"
-version = "0.3.7"
+version = "0.3.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "00ee797b6a24ac58dadd6574913bec0bc4c0b642d6acbdce23a6a625664d2f82"
+checksum = "591ce4903546c530c5f6d8d857ad7ca1f54dc5b9a2b6d3354df9ce44975b6ed6"
 dependencies = [
  "pulldown-cmark 0.9.6",
  "pulldown_mdbook",
