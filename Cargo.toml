@@ -1,6 +1,6 @@
 [package]
 name = "mdbook-typst"
-version = "0.1.6"
+version = "0.1.7"
 license = "MIT OR Apache-2.0"
 description = "An mdBook backend to output Typst markup, pdf, png, or svg"
 authors = ["Christian Legnitto <christian@legnitto.com>"]

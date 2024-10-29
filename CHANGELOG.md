@@ -5,7 +5,39 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 0.1.6 (2024-09-08)
+## 0.1.7 (2024-10-28)
+
+### Chore
+
+ - <csr-id-0a882d8e2b705f17d8bfc9b185e7830814d786fb/> Update Cargo.lock.
+
+### New Features
+
+ - <csr-id-8eddca910f2d42c3789600e0eb385c583e1c72b5/> Add support for horizontal rules.
+
+### Commit Statistics
+
+<csr-read-only-do-not-edit/>
+
+ - 2 commits contributed to the release.
+ - 50 days passed between releases.
+ - 2 commits were understood as [conventional](https://www.conventionalcommits.org).
+ - 0 issues like '(#ID)' were seen in commit messages
+
+### Commit Details
+
+<csr-read-only-do-not-edit/>
+
+<details><summary>view details</summary>
+
+ * **Uncategorized**
+    - Update Cargo.lock. ([`0a882d8`](https://github.com/LegNeato/mdbook-typst/commit/0a882d8e2b705f17d8bfc9b185e7830814d786fb))
+    - Add support for horizontal rules. ([`8eddca9`](https://github.com/LegNeato/mdbook-typst/commit/8eddca910f2d42c3789600e0eb385c583e1c72b5))
+</details>
+
+## 0.1.6 (2024-09-07)
+
+<csr-id-013290fde460d08e644cf4069c8341e38c79c7c1/>
 
 ### Other
 
@@ -16,7 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 1 commit contributed to the release.
+ - 2 commits contributed to the release.
  - 1 day passed between releases.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
@@ -28,6 +60,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <details><summary>view details</summary>
 
  * **Uncategorized**
+    - Release mdbook-typst v0.1.6 ([`ffebc48`](https://github.com/LegNeato/mdbook-typst/commit/ffebc48eb46db225dc32912c0f87ec2fa217be73))
     - Add support for tables. ([`013290f`](https://github.com/LegNeato/mdbook-typst/commit/013290fde460d08e644cf4069c8341e38c79c7c1))
 </details>
 
@@ -178,7 +211,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <csr-read-only-do-not-edit/>
 
- - 8 commits contributed to the release over the course of 1 calendar day.
+ - 8 commits contributed to the release.
  - 1 commit was understood as [conventional](https://www.conventionalcommits.org).
  - 0 issues like '(#ID)' were seen in commit messages
 
