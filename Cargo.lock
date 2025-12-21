@@ -485,7 +485,7 @@ dependencies = [
 
 [[package]]
 name = "mdbook-typst"
-version = "0.1.7"
+version = "0.1.8"
 dependencies = [
  "mdbook",
  "pullup",
