@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.9](https://github.com/LegNeato/mdbook-typst/compare/v0.1.8...v0.1.9) - 2025-12-22
+
+### Added
+
+- Add converters for code blocks, callouts, HTML anchors, and asset copying
+
+### Other
+
+- Add LICENSE-MIT ([#24](https://github.com/LegNeato/mdbook-typst/pull/24))
+- Update to pullup 0.4.2
+- Update pullup to 0.4
+- Fix clippy warnings and add CSS parsing
+
 ## [0.1.8](https://github.com/LegNeato/mdbook-typst/compare/v0.1.7...v0.1.8) - 2025-12-21
 
 ### Other
