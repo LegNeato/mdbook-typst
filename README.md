@@ -48,8 +48,28 @@ By default `mdbook-typst` will output to `book/typst/book.[format]`.
 
 ## Other configuration
 
-`mdbook-typst` is fairly configurable. Check out [the configuration
-code](./src/config.rs) for a complete list of options.
+`mdbook-typst` uses its [configuration code](./src/config.rs) to provide the following options:
+
+Page styling:
+
+* `paper` (Default `us-letter`)
+* `text_size` (Default `11pt`)
+* `text_font` (Default `Helvetica`)
+* `paragraph_spacing` (Default `2em`)
+* `paragraph_leading` (Default `0.8em`)
+* `paragraph_leading` (Default `0.8em`)
+* `heading_numbering` (Default none)
+* `heading_below` and `heading_above` (Both Default `2em`)
+* `link_underline`/`link_color` (Default `true`/`blue`)
+
+TOC Formatting:
+
+* enable (Default `true`)
+* depth (Default 2)
+* indent (Default `2em`)
+* Entry Show Rules (Level Number, Text Size, Emboldened) (Default `level: 1, text_size: 11pt, bold: true`)
+
+There is also an optional markup header/footer
 
 If you want more control, consider creating your own formatter and/or preprocessing the
 book using the [pullup](https://github.com/LegNeato/pullup) project.
