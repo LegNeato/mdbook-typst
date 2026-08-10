@@ -12,6 +12,7 @@ use pullup::ParserEvent;
 mod config;
 mod converters;
 mod css;
+mod footnotes;
 
 use config::Config;
 use converters::{
@@ -104,15 +105,19 @@ fn main() -> Result<(), std::io::Error> {
     css_styles.load_css_directory(&ctx.root);
     let css_styles = std::sync::Arc::new(css_styles);
 
-    // Parse mdbook to events.
-    let parser = pullup::mdbook::Parser::from_rendercontext(&ctx);
+    // Parse mdBook content with pulldown-cmark footnotes enabled.
+    let parser = footnotes::mdbook_events(&ctx);
 
     // Convert the mdbook events to pullup `ParserEvent`s.
     let mut events: Box<dyn Iterator<Item = ParserEvent<'_>>> = Box::new(
         pullup::mdbook::to::typst::Conversion::builder()
-            .events(parser.iter().cloned())
+            .events(parser.into_iter())
             .build(),
     );
+
+    // Resolve structured footnote definitions after Markdown has been
+    // converted to Typst events, retaining the complete event body.
+    events = Box::new(footnotes::process_events(events).into_iter());
 
     //println!("{:#?}", events.collect::<Vec<_>>());
     //panic!("x");
@@ -427,6 +432,42 @@ fn main() -> Result<(), std::io::Error> {
         toc_events.push(pullup::ParserEvent::Typst(pullup::typst::Event::PageBreak));
     }
 
+    if !cfg
+        .style
+        .enable
+        .unwrap_or_else(|| config::default_style_enable().expect("a value"))
+    {
+        style_events.clear();
+    }
+
+    // Optional user template. The template is inserted after the generated
+    // document-level `#set` statements, matching the original fork workflow.
+    let template = if cfg
+        .template
+        .enable
+        .unwrap_or_else(|| config::default_template_enable().expect("a value"))
+    {
+        let name = cfg
+            .template
+            .name
+            .as_ref()
+            .map_or(Some(config::default_template_name()), |s| none_on_empty(s));
+        let arg = cfg
+            .template
+            .arg
+            .as_ref()
+            .map_or(Some(config::default_template_arg()), |s| none_on_empty(s));
+        match (name, arg) {
+            (Some(name), Some(arg)) => format!(
+                "#import \"{}\": template\n#show: template.with(\n{})\n",
+                name, arg
+            ),
+            _ => String::new(),
+        }
+    } else {
+        String::new()
+    };
+
     // Aggregate synthesized events in proper order.
     events = Box::new(style_events.into_iter().chain(toc_events).chain(events));
 
@@ -471,7 +512,26 @@ fn main() -> Result<(), std::io::Error> {
     let full_markup: String = markup.collect();
 
     // Post-process HTML comments embedded in table cells to convert them to images
-    let full_markup = converters::process_html_comments(&full_markup, &css_styles);
+    let full_markup =
+        converters::process_html_comments(&full_markup, &css_styles).replace(r"====", "===");
+
+    let full_markup = if template.is_empty() {
+        full_markup
+    } else {
+        let mut output = String::new();
+        let mut inserted = false;
+        for line in full_markup.split_inclusive('\n') {
+            if !inserted && !line.trim_start().starts_with("#set") {
+                output.push_str(&template);
+                inserted = true;
+            }
+            output.push_str(line);
+        }
+        if !inserted {
+            output.push_str(&template);
+        }
+        output
+    };
 
     // Write the Typst markup to filesystem.
     let mut f = File::create(&markup_path).unwrap();
